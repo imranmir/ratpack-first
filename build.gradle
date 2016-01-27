@@ -1,9 +1,10 @@
 buildscript {
   repositories {
+    url "https://plugins.gradle.org/m2/"
     jcenter()
   }
   dependencies {
-    classpath "io.ratpack:ratpack-gradle:1.1.1"
+    classpath "io.ratpack:ratpack-gradle: 1.1.1"
     classpath "com.github.jengelman.gradle.plugins:shadow:1.2.2"
   }
 }
@@ -28,3 +29,5 @@ dependencies {
 task stage {
   dependsOn installDist
 }
+
+task wrapper(type: Wrapper) { gradleVersion = '2.7' }
