@@ -1,9 +1,8 @@
 *.iws
 *.ipr
 *.iml
-.gradle
 .idea
+.gradle
 build
-gradlew
 gradlew.bat
 .git
