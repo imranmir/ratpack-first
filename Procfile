@@ -1,2 +1,5 @@
-web: java -jar -Dport=$PORT build/libs/project_name-all.jar --stacktrace
-
+addons:
+  config_vars:
+  JAVA_OPTS: -Dfile.encoding=UTF-8 -server -Xmx512m -XX:+UseCompressedOops
+  default_process_types:
+    web: build/install/ratpack/bin/ratpack
