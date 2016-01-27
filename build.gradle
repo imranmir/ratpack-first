@@ -26,5 +26,5 @@ dependencies {
 }
 
 task stage {
-  dependsOn shadowJar
+  dependsOn installDist
 }
