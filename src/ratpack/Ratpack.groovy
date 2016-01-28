@@ -9,6 +9,7 @@ import static groovy.json.JsonOutput.toJson
 import static ratpack.groovy.Groovy.groovyMarkupTemplate
 import static ratpack.groovy.Groovy.ratpack
 import static ratpack.jackson.Jackson.json
+import static ratpack.jackson.Jackson.jsonNode
 
 class SimpleConfig {
     String message
@@ -30,14 +31,14 @@ ratpack {
             render(prettyPrint(toJson(config)))
         }
 
-        get('renderGtpl') {
+        get('renderGtpl'){
             render groovyMarkupTemplate("profile.gtpl",
                     name: request.queryParams.name,
                     title: "PROFILE",
                     hobbies: ['flying', 'skieing', 'swimming', 'reading'])
         }
 
-        get('renderjson') {
+        get('renderjson'){
             render json([name: 'imran'])
         }
 
@@ -49,6 +50,16 @@ ratpack {
                 render s
             }
         }
+
+//        put('parsejson'){
+//            parse(jsonNode()).map{x ->
+//                println x
+//                x
+//            }.then{
+//                render it
+//            }
+//        }
+
 
 
     }
