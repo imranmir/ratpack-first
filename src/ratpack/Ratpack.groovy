@@ -4,9 +4,12 @@ import anaimal.Zoo
 import handlers.RouterHandler
 import handlers.TestHandler
 import ratpack.exec.Blocking
+import ratpack.exec.ExecController
 import ratpack.exec.Promise
 import ratpack.form.Form
+import ratpack.func.Pair
 import ratpack.groovy.template.MarkupTemplateModule
+import ratpack.handling.Context
 
 import static ratpack.groovy.Groovy.groovyMarkupTemplate
 import static ratpack.groovy.Groovy.ratpack
@@ -18,6 +21,53 @@ ratpack {
     }
 
     handlers {
+
+        get('async1') {
+            println "async 1111"
+            Blocking.get {
+                new File("/Users/imran/projects/Ratpack/ratpack-first/build.gradle").text // returns string
+            }then {
+                render it // it is the return of getValueFromDb()
+            }
+        }
+
+        prefix('async2') {
+            get {
+                Blocking.get {
+                    new File("/Users/imran/projects/Ratpack/ratpack-first/first.txt").text // returns string
+                } then {
+                    render it
+                }
+                sleep 3000
+                println "4"
+            }
+        }
+
+        get('async5') {
+            def l = []
+            Blocking.get {
+                 return Thread.start {
+                    sleep 3000
+                }
+            } then {
+                l << it
+            }
+            Blocking.get {
+                return Thread.start {
+                    sleep 2000
+                }
+            } then {
+                l << it
+            }
+            Blocking.get {
+                return Thread.start {
+                    sleep 1000
+                }
+            }then {
+                l << it
+                render l.join(",")
+            }
+        }
 
         get("persons/:id") {
             render "I am person with id $pathTokens.id and your name is " + request.queryParams.name
@@ -32,6 +82,7 @@ ratpack {
                 }
             }
         }
+
 
         get('write-usage') {
             Blocking.get {
@@ -75,6 +126,12 @@ ratpack {
             }
         }
 
+        get ('pair') {
+            getPromiseWithPair().then {
+                render it.left + " " + it.right
+            }
+        }
+
     }
 
 }
@@ -115,6 +172,18 @@ Promise<String> getCombinedFilesPromise2() {
 
                 s1 + s2 + s3
             }
+        }
+    }
+}
+
+Promise<String> getPromiseWithPair() {
+    Blocking.get {
+        new File("/Users/imran/projects/Ratpack/ratpack-first/first.txt").text
+    } flatMap { s1 ->
+        Blocking.get {
+            new File("/Users/imran/projects/Ratpack/ratpack-first/second.txt").text
+        } map { s2 ->
+            Pair.of(s1, s2)
         }
     }
 }
