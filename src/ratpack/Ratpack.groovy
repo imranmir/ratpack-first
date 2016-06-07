@@ -25,17 +25,23 @@ ratpack {
         get('async1') {
             println "async 1111"
             Blocking.get {
+                println "222"
                 new File("/Users/imran/projects/Ratpack/ratpack-first/build.gradle").text // returns string
             }then {
+                println "44"
                 render it // it is the return of getValueFromDb()
+                println "555"
             }
+            println "666"
         }
 
         prefix('async2') {
             get {
                 Blocking.get {
+                    println "11"
                     new File("/Users/imran/projects/Ratpack/ratpack-first/first.txt").text // returns string
                 } then {
+                    println "222"
                     render it
                 }
                 sleep 3000
